@@ -2,4 +2,5 @@
     <string name="app_name">National Code</string>
     <string name="national_code">National Code</string>
     <string name="lorem">lorem</string>
+    <string name="validate_national_code">اعتبار سنجی کد ملی</string>
 </resources>
