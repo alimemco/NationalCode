@@ -1,89 +1,89 @@
 package com.alirnp.nationalcode;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AnticipateInterpolator;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 
+import com.hanks.htextview.base.HTextView;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    ConstraintLayout mConstraintLayoutRoot;
-    ConstraintLayout mConstraintLayoutValidate;
+    boolean doubleBackToExitPressedOnce = false;
+    private ConstraintLayout mConstraintLayoutRoot;
+    private View mViewGenerate;
+    private View mViewValidate;
+    private HTextView mTextViewCode;
+    private EditText mEditTextCode;
+    private ImageView mImageViewGenerate;
+    private ImageView mImageViewCopy;
+    private ImageView mImageViewCheckValidate;
 
-    private static final String TAG = "NationalCodeApp";
-    ConstraintLayout mConstraintLayoutGenerate;
     private State state = State.DEFAULT;
-    private boolean showAll = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        long codeLong = 1810350832L;
-        String codeString = "1810350832";
-
-        Log.i(TAG, "validate: " + NationalCode.validateCode(codeLong));
-        Log.i(TAG, "validate: " + NationalCode.validateCode(codeString));
-        Log.i(TAG, "generate: " + NationalCode.generateCode());
+        setContentView(R.layout.activity_main_state_default);
 
         findViews();
 
+        setListeners();
 
+    }
+
+    private void setListeners() {
+
+        mConstraintLayoutRoot.setOnClickListener(this);
+
+        mViewValidate.setOnClickListener(this);
+        mViewGenerate.setOnClickListener(this);
+
+        mImageViewGenerate.setOnClickListener(this);
+        mImageViewCopy.setOnClickListener(this);
+        mImageViewCheckValidate.setOnClickListener(this);
     }
 
     private void findViews() {
-        mConstraintLayoutRoot = findViewById(R.id.activity_main_constraintLayoutRoot);
-        mConstraintLayoutValidate = findViewById(R.id.activity_main_constraintLayoutValidate);
-        mConstraintLayoutGenerate = findViewById(R.id.activity_main_constraintLayoutGenerate);
 
-        mConstraintLayoutRoot.setOnClickListener(this);
-        mConstraintLayoutValidate.setOnClickListener(this);
-        mConstraintLayoutGenerate.setOnClickListener(this);
+        mConstraintLayoutRoot = findViewById(R.id.activity_main_state_constraintLayoutRoot);
+        mViewGenerate = findViewById(R.id.activity_main_state_view_generate);
+        mViewValidate = findViewById(R.id.activity_main_state_view_validation);
+
+        mTextViewCode = findViewById(R.id.textView_code);
+        mEditTextCode = findViewById(R.id.editText_code);
+        mImageViewGenerate = findViewById(R.id.imageView_generateCode);
+        mImageViewCopy = findViewById(R.id.imageView_copyCode);
+        mImageViewCheckValidate = findViewById(R.id.imageView_checkValidateCode);
     }
 
-    private void invalidateLayouts() {
-
-        invalidateRoot();
-        invalidateValidate();
-    }
-
-    private void invalidateRoot() {
-
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(mConstraintLayoutRoot);
-        float height;
+    private void changeLayout() {
+        ConstraintSet constraintSetRoot = new ConstraintSet();
 
         switch (state) {
-            case DEFAULT:
-                height = getResources().getDimension(R.dimen._200sdp);
-
-                constraintSet.constrainHeight(R.id.activity_main_constraintLayoutGenerate, (int) height);
-                constraintSet.constrainHeight(R.id.activity_main_constraintLayoutValidate, (int) height);
-                break;
-
-            case GENERATE:
-                height = getResources().getDimension(R.dimen._335sdp);
-
-                constraintSet.constrainHeight(R.id.activity_main_constraintLayoutGenerate, (int) height);
-                constraintSet.constrainHeight(R.id.activity_main_constraintLayoutValidate, ConstraintSet.WRAP_CONTENT);
-
-                break;
-
             case VALIDATE:
-                height = getResources().getDimension(R.dimen._335sdp);
-
-                constraintSet.constrainHeight(R.id.activity_main_constraintLayoutGenerate, ConstraintSet.WRAP_CONTENT);
-                constraintSet.constrainHeight(R.id.activity_main_constraintLayoutValidate, (int) height);
+                constraintSetRoot.clone(this, R.layout.activity_main_state_validate);
+                break;
+            case GENERATE:
+                constraintSetRoot.clone(this, R.layout.activity_main_state_generate);
 
                 break;
-
+            case DEFAULT:
+                constraintSetRoot.clone(this, R.layout.activity_main_state_default);
+                break;
         }
 
 
@@ -93,82 +93,89 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             transition.setInterpolator(new AnticipateInterpolator(1.0f));
             transition.setDuration(400);
 
-            TransitionManager.beginDelayedTransition(mConstraintLayoutValidate, transition);
+            TransitionManager.beginDelayedTransition(mConstraintLayoutRoot, new AutoTransition());
         }
 
 
-        constraintSet.applyTo(mConstraintLayoutRoot);
-
-
+        constraintSetRoot.applyTo(mConstraintLayoutRoot);
     }
 
-    private void invalidateValidate() {
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone(mConstraintLayoutValidate);
-
-        switch (state) {
-            case DEFAULT:
-                float height = getResources().getDimension(R.dimen._40sdp);
-                constraintSet.connect(R.id.activity_main_imageView_validate, ConstraintSet.TOP, ConstraintSet.PARENT_ID, ConstraintSet.TOP);
-                constraintSet.connect(R.id.activity_main_imageView_validate, ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM);
-                constraintSet.connect(R.id.activity_main_imageView_validate, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-                constraintSet.connect(R.id.activity_main_imageView_validate, ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START);
-                constraintSet.setVerticalBias(R.id.activity_main_textView_validate, 0.8f);
-                constraintSet.setVerticalBias(R.id.activity_main_imageView_validate, 0.4f);
-                constraintSet.setHorizontalBias(R.id.activity_main_imageView_validate, 0.5f);
-
-                constraintSet.constrainHeight(R.id.activity_main_imageView_validate, (int) height);
-                break;
-
-            case GENERATE:
-                constraintSet.connect(R.id.activity_main_imageView_validate, ConstraintSet.TOP, R.id.activity_main_textView_validate, ConstraintSet.TOP);
-                constraintSet.connect(R.id.activity_main_imageView_validate, ConstraintSet.BOTTOM, R.id.activity_main_textView_validate, ConstraintSet.BOTTOM);
-                constraintSet.connect(R.id.activity_main_imageView_validate, ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END);
-                constraintSet.connect(R.id.activity_main_imageView_validate, ConstraintSet.START, R.id.activity_main_textView_validate, ConstraintSet.END);
-                constraintSet.setVerticalBias(R.id.activity_main_textView_validate, 0.5f);
-                constraintSet.setHorizontalBias(R.id.activity_main_imageView_validate, 0.3f);
-                constraintSet.constrainHeight(R.id.activity_main_imageView_validate, 0);
-                break;
-
-            case VALIDATE:
-                break;
-
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
         }
 
+        state = State.DEFAULT;
+        changeLayout();
 
-        ChangeBounds transition;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            transition = new ChangeBounds();
-            transition.setInterpolator(new AnticipateInterpolator(1.0f));
-            transition.setDuration(400);
-
-            TransitionManager.beginDelayedTransition(mConstraintLayoutValidate, transition);
-        }
-
-
-        constraintSet.applyTo(mConstraintLayoutValidate);
-
+        this.doubleBackToExitPressedOnce = true;
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.activity_main_constraintLayoutRoot:
-                state = State.DEFAULT;
+            case R.id.activity_main_state_view_generate:
+                state = State.GENERATE;
                 break;
 
-            case R.id.activity_main_constraintLayoutValidate:
+            case R.id.activity_main_state_view_validation:
                 state = State.VALIDATE;
                 break;
 
-            case R.id.activity_main_constraintLayoutGenerate:
-                state = State.GENERATE;
+            case R.id.activity_main_state_constraintLayoutRoot:
+                state = State.DEFAULT;
+                break;
+
+
+            case R.id.imageView_generateCode:
+                mTextViewCode.animateText(spaceText(NationalCode.generateCode()));
+                break;
+
+            case R.id.imageView_copyCode:
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("national code", mTextViewCode.getText().toString().replaceAll("\\s+", ""));
+
+                if (clipboard != null) {
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(this, "کد ملی در حافظه موقت ذخیره شد", Toast.LENGTH_SHORT).show();
+                }
+
+                break;
+
+            case R.id.imageView_checkValidateCode:
+                if (mEditTextCode.getText() == null) return;
+
+
+                String text = mEditTextCode.getText().toString();
+                if (text.length() != 10) {
+                    Toast.makeText(this, "طول کد ملی صحیح نمی باشد", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                boolean validate = NationalCode.validateCode(text);
+
+                Toast.makeText(this, "status : " + validate, Toast.LENGTH_SHORT).show();
+
+
                 break;
         }
-
-        invalidateLayouts();
+        changeLayout();
     }
 
+    private String spaceText(Long generatedCode) {
+        String code = String.valueOf(generatedCode);
+        StringBuilder spacedCode = new StringBuilder();
+
+        for (int i = 0; i < code.length(); i++) {
+            spacedCode.append(code.charAt(i));
+
+            if (i != (code.length() - 1))
+                spacedCode.append(" ");
+        }
+        return spacedCode.toString();
+    }
 
     private enum State {DEFAULT, GENERATE, VALIDATE}
 }

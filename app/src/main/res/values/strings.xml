@@ -4,4 +4,6 @@
     <string name="lorem">lorem</string>
     <string name="validate_national_code">اعتبار سنجی کد ملی</string>
     <string name="generate_national_code">تولید کد ملی</string>
+    <string name="sample_national_code">0 0 0 0 0 0 0 0 0 0</string>
+    <string name="sample_national_code_2">0000000000</string>
 </resources>
