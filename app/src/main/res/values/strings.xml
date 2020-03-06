@@ -6,4 +6,6 @@
     <string name="generate_national_code">تولید کد ملی</string>
     <string name="sample_national_code">0 0 0 0 0 0 0 0 0 0</string>
     <string name="sample_national_code_2">0000000000</string>
+    <string name="national_code_true">کد ملی درست است</string>
+    <string name="national_code_false">کد ملی غلط است</string>
 </resources>

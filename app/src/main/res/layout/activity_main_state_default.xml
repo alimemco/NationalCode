@@ -8,15 +8,12 @@
     android:background="@color/colorPrimary"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/activity_main_state_textView_title"
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/activity_main_state_imageView_ill"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-black"
-        android:gravity="center"
-        android:text="@string/national_code"
-        android:textColor="@color/white"
-        android:textSize="@dimen/_14sdp"
+        android:layout_height="0dp"
+        app:srcCompat="@drawable/ic_ill"
         app:layout_constraintBottom_toTopOf="@id/activity_main_state_view_generate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -209,6 +206,39 @@
             app:layout_constraintStart_toStartOf="@+id/editText_code"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_tick" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView_repeat"
+            android:layout_width="@dimen/_42sdp"
+            android:layout_height="@dimen/_42sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:background="@drawable/ripple"
+            android:padding="@dimen/_10sdp"
+            android:tint="@color/white"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_status"
+            app:layout_constraintEnd_toStartOf="@+id/textView_status"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/textView_status"
+            app:srcCompat="@drawable/ic_refresh" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/textView_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:fontFamily="@font/iran_sans"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_17sdp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@+id/editText_code"
+            app:layout_constraintEnd_toEndOf="@+id/editText_code"
+            app:layout_constraintStart_toStartOf="@+id/editText_code"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="@string/national_code_true" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

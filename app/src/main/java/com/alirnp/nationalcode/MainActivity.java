@@ -1,17 +1,18 @@
 package com.alirnp.nationalcode;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.transition.AutoTransition;
-import android.transition.ChangeBounds;
 import android.transition.TransitionManager;
 import android.view.View;
-import android.view.animation.AnticipateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,12 +28,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View mViewGenerate;
     private View mViewValidate;
     private HTextView mTextViewCode;
+    private TextView mTextViewStatus;
+    private ImageView mImageViewRepeat;
     private EditText mEditTextCode;
     private ImageView mImageViewGenerate;
     private ImageView mImageViewCopy;
     private ImageView mImageViewCheckValidate;
 
     private State state = State.DEFAULT;
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        View view = activity.getCurrentFocus();
+        if (view == null)
+            view = new View(activity);
+
+        if (imm != null)
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +55,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViews();
 
         setListeners();
+        config();
 
+    }
+
+    private void config() {
+        showStatusItems(false);
     }
 
     private void setListeners() {
@@ -55,6 +73,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mImageViewGenerate.setOnClickListener(this);
         mImageViewCopy.setOnClickListener(this);
         mImageViewCheckValidate.setOnClickListener(this);
+        mImageViewRepeat.setOnClickListener(this);
+
     }
 
     private void findViews() {
@@ -64,10 +84,26 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mViewValidate = findViewById(R.id.activity_main_state_view_validation);
 
         mTextViewCode = findViewById(R.id.textView_code);
+        mTextViewStatus = findViewById(R.id.textView_status);
         mEditTextCode = findViewById(R.id.editText_code);
         mImageViewGenerate = findViewById(R.id.imageView_generateCode);
         mImageViewCopy = findViewById(R.id.imageView_copyCode);
         mImageViewCheckValidate = findViewById(R.id.imageView_checkValidateCode);
+        mImageViewRepeat = findViewById(R.id.imageView_repeat);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            super.onBackPressed();
+            return;
+        }
+
+        state = State.DEFAULT;
+        changeLayout();
+
+        this.doubleBackToExitPressedOnce = true;
+        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
     private void changeLayout() {
@@ -87,31 +123,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
-        ChangeBounds transition;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT) {
-            transition = new ChangeBounds();
-            transition.setInterpolator(new AnticipateInterpolator(1.0f));
-            transition.setDuration(400);
-
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.KITKAT)
             TransitionManager.beginDelayedTransition(mConstraintLayoutRoot, new AutoTransition());
-        }
 
 
         constraintSetRoot.applyTo(mConstraintLayoutRoot);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (doubleBackToExitPressedOnce) {
-            super.onBackPressed();
-            return;
-        }
-
-        state = State.DEFAULT;
-        changeLayout();
-
-        this.doubleBackToExitPressedOnce = true;
-        new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
     }
 
     @Override
@@ -148,6 +164,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.imageView_checkValidateCode:
                 if (mEditTextCode.getText() == null) return;
 
+                hideKeyboard(this);
 
                 String text = mEditTextCode.getText().toString();
                 if (text.length() != 10) {
@@ -156,8 +173,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 boolean validate = NationalCode.validateCode(text);
 
-                Toast.makeText(this, "status : " + validate, Toast.LENGTH_SHORT).show();
+                checkStatusCode(validate);
 
+
+                break;
+
+            case R.id.imageView_repeat:
+
+                showStatusItems(false);
+                mEditTextCode.setText("");
 
                 break;
         }
@@ -176,6 +200,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         return spacedCode.toString();
     }
+
+    private void checkStatusCode(boolean validate) {
+
+        int text = validate ? R.string.national_code_true : R.string.national_code_false;
+        mTextViewStatus.setText(getResources().getText(text));
+
+        showStatusItems(true);
+    }
+
+    private void showStatusItems(boolean show) {
+        mTextViewStatus.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        mImageViewRepeat.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
+        mImageViewCheckValidate.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+    }
+
 
     private enum State {DEFAULT, GENERATE, VALIDATE}
 }
