@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.makeText(this, "طول کد ملی صحیح نمی باشد", Toast.LENGTH_SHORT).show();
                     return;
                 }
-                boolean validate = NationalCode.validateCode(text);
+                boolean validate = NationalCode.validationNationalCode(text);
 
                 checkStatusCode(validate);
 

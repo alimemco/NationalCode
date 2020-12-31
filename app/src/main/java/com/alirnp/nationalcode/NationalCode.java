@@ -1,53 +1,51 @@
 package com.alirnp.nationalcode;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 class NationalCode {
+    
+    protected static boolean specialCasesThatAreNotNationalCode(String code) {
+        String[] notNationalCode = {"1111111111", "2222222222", "3333333333", "4444444444", "5555555555", "6666666666", "7777777777", "8888888888", "9999999999", "0000000000"};
+        List<String> listOfNotNationalCode = Arrays.asList(notNationalCode);
+        return listOfNotNationalCode.contains(code);
+    }
 
-    static boolean validateCode(long code) {
+    protected static boolean validationNationalCode(String code) {
 
-        int len = (int) Math.log10(code) + 1;
-        int sum = 0;
-        int securityCode;
-        long number;
-        long temp;
-        int lastNumber = 0;
+        int length = 10;
 
-        if (len == 10) {
+        // check length
+        if (code.length() != length)
+            return false;
 
-            int index = 1;
-            temp = code;
+        // check exceptions
+        if (specialCasesThatAreNotNationalCode(code))
+            return false;
 
-            while (temp > 0) {
-                number = temp % 10;
-                temp = temp / 10;
+        long nationalCode = Long.parseLong(code);
+        byte[] arrayNationalCode = new byte[length];
 
-                if (index == 1) {
-                    lastNumber = (int) number;
-                } else {
-                    sum += number * (index);
-                }
-                index++;
-            }
-
-            int left = sum % 11;
-
-            securityCode = (left < 2) ? left : 11 - left;
-
-            return securityCode == lastNumber;
-        } else {
-            System.out.println("len :" + len);
+        //extract digits from number
+        for (int i = 0; i < length; i++) {
+            arrayNationalCode[i] = (byte) (nationalCode % length);
+            nationalCode = nationalCode / length;
         }
 
+        // check the control digit
+        int sum = 0;
+        for (int i = 9; i > 0; i--)
+            sum += arrayNationalCode[i] * (i + 1);
 
-        return false;
+        int temp = sum % 11;
+        if (temp < 2)
+            return arrayNationalCode[0] == temp;
+        else
+            return arrayNationalCode[0] == 11 - temp;
     }
 
-    static boolean validateCode(String code) {
-        return validateCode(Long.parseLong(code));
-    }
-
-    static Long generateCode() {
+    protected static Long generateCode() {
         int code;
         int min = 111111111;
         int max = 999999999;
