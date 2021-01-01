@@ -13,11 +13,11 @@
         android:id="@+id/activity_main_state_imageView_ill"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:srcCompat="@drawable/ic_ill"
         app:layout_constraintBottom_toTopOf="@id/activity_main_state_view_generate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_ill" />
 
     <View
         android:id="@+id/activity_main_state_view_cover"
@@ -70,7 +70,7 @@
         android:layout_height="@dimen/_130sdp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/shape_card"
+        android:background="@drawable/shape_gradient_orange"
         android:fontFamily="@font/iran_sans_bold"
         android:textSize="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="@+id/activity_main_state_view_validation"
@@ -167,7 +167,7 @@
         android:layout_height="@dimen/_130sdp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
-        android:background="@drawable/shape_card"
+        android:background="@drawable/shape_gradient_blue"
         android:fontFamily="@font/iran_sans_bold"
         android:textSize="@dimen/_15sdp"
         app:layout_constraintBottom_toBottomOf="@+id/activity_main_state_view_validation"
@@ -181,68 +181,80 @@
             android:id="@+id/editText_code"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20sdp"
-            android:layout_marginEnd="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_10sdp"
             android:background="@drawable/selector_edit_text"
             android:gravity="center"
             android:hint="@string/sample_national_code_2"
             android:inputType="number"
             android:maxLength="10"
             android:textSize="@dimen/_22sdp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.7" />
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/imageView_checkValidateCode"
-            android:layout_width="@dimen/_35sdp"
-            android:layout_height="@dimen/_35sdp"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_15sdp"
-            android:background="@drawable/ripple_circle"
-            android:padding="@dimen/_10sdp"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toTopOf="@+id/editText_code"
-            app:layout_constraintEnd_toEndOf="@+id/editText_code"
-            app:layout_constraintStart_toStartOf="@+id/editText_code"
-            app:layout_constraintTop_toTopOf="parent"
-            android:visibility="invisible"
-            app:srcCompat="@drawable/ic_tick" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/imageView_repeat"
-            android:layout_width="@dimen/_42sdp"
-            android:layout_height="@dimen/_42sdp"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_15sdp"
-            android:background="@drawable/ripple"
-            android:padding="@dimen/_10sdp"
-            android:tint="@color/white"
-            app:layout_constraintBottom_toBottomOf="@+id/textView_status"
-            app:layout_constraintEnd_toStartOf="@+id/textView_status"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView_status"
-            app:srcCompat="@drawable/ic_refresh" />
-
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/textView_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_15sdp"
-            android:fontFamily="@font/iran_sans"
-            android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="@dimen/_17sdp"
-            android:visibility="visible"
-            app:layout_constraintBottom_toTopOf="@+id/editText_code"
-            app:layout_constraintEnd_toEndOf="@+id/editText_code"
-            app:layout_constraintStart_toStartOf="@+id/editText_code"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/national_code_true" />
+            android:background="@drawable/shape_white_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/imageView_clear"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/editText_code">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imageView_repeat2"
+                android:layout_width="@dimen/_37sdp"
+                android:layout_height="@dimen/_37sdp"
+                android:adjustViewBounds="true"
+                android:background="@drawable/ripple"
+                android:paddingLeft="@dimen/_8sdp"
+                android:paddingTop="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_8sdp"
+                android:tint="@color/blue_2"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView_repeat1"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/imageView_repeat1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_tick" />
+
+            <Button
+                android:id="@+id/imageView_repeat1"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/_37sdp"
+                android:background="@null"
+                android:fontFamily="@font/iran_sans_bold"
+                android:text="بررسی"
+                android:clickable="false"
+                android:focusable="false"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toRightOf="@+id/imageView_repeat2"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/imageView_clear"
+            android:layout_width="@dimen/_37sdp"
+            android:layout_height="@dimen/_37sdp"
+            android:background="@drawable/shape_white_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:padding="@dimen/_8sdp"
+            android:tint="@color/blue_2"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView_checkValidateCode"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/imageView_checkValidateCode"
+            app:layout_constraintTop_toTopOf="@+id/imageView_checkValidateCode"
+            app:srcCompat="@drawable/ic_clear" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

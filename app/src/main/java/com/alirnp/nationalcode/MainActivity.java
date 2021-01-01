@@ -28,12 +28,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private View mViewGenerate;
     private View mViewValidate;
     private HTextView mTextViewCode;
-    private TextView mTextViewStatus;
     private ImageView mImageViewRepeat;
     private EditText mEditTextCode;
     private ImageView mImageViewGenerate;
     private ImageView mImageViewCopy;
-    private ImageView mImageViewCheckValidate;
+    private ConstraintLayout mImageViewCheckValidate;
 
     private State state = State.DEFAULT;
 
@@ -55,13 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         findViews();
 
         setListeners();
-        config();
-
     }
 
-    private void config() {
-        showStatusItems(false);
-    }
 
     private void setListeners() {
 
@@ -84,12 +78,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mViewValidate = findViewById(R.id.activity_main_state_view_validation);
 
         mTextViewCode = findViewById(R.id.textView_code);
-        mTextViewStatus = findViewById(R.id.textView_status);
         mEditTextCode = findViewById(R.id.editText_code);
         mImageViewGenerate = findViewById(R.id.imageView_generateCode);
         mImageViewCopy = findViewById(R.id.imageView_copyCode);
         mImageViewCheckValidate = findViewById(R.id.imageView_checkValidateCode);
-        mImageViewRepeat = findViewById(R.id.imageView_repeat);
+        mImageViewRepeat = findViewById(R.id.imageView_clear);
     }
 
     @Override
@@ -178,9 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 break;
 
-            case R.id.imageView_repeat:
-
-                showStatusItems(false);
+            case R.id.imageView_clear:
                 mEditTextCode.setText("");
 
                 break;
@@ -206,15 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void checkStatusCode(boolean validate) {
 
         int text = validate ? R.string.national_code_true : R.string.national_code_false;
-        mTextViewStatus.setText(getResources().getText(text));
-
-        showStatusItems(true);
-    }
-
-    private void showStatusItems(boolean show) {
-        mTextViewStatus.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-        mImageViewRepeat.setVisibility(show ? View.VISIBLE : View.INVISIBLE);
-        mImageViewCheckValidate.setVisibility(show ? View.INVISIBLE : View.VISIBLE);
+        Toast.makeText(this, getResources().getText(text), Toast.LENGTH_SHORT).show();
     }
 
 
