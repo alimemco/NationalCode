@@ -184,6 +184,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mEditTextCode.setText("");
 
                 break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + v.getId());
         }
         changeLayout();
     }
