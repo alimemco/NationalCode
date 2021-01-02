@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -161,7 +160,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 String text = mEditTextCode.getText().toString();
                 if (text.length() != 10) {
-                    Toast.makeText(this, "طول کد ملی صحیح نمی باشد", Toast.LENGTH_SHORT).show();
+                    String error = getResources().getString(R.string.national_code_length_is_wrong);
+                    showResultDialog(false, error);
                     return;
                 }
                 boolean validate = NationalCode.validationNationalCode(text);
@@ -197,7 +197,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void checkStatusCode(boolean validate) {
 
         int text = validate ? R.string.national_code_true : R.string.national_code_false;
-        Toast.makeText(this, getResources().getText(text), Toast.LENGTH_SHORT).show();
+        showResultDialog(validate, getResources().getText(text).toString());
+        // Toast.makeText(this, getResources().getText(text), Toast.LENGTH_SHORT).show();
+    }
+
+    private void showResultDialog(boolean isCorrect, String text) {
+        ResultFragment resultFragment = ResultFragment.newInstance(isCorrect, text);
+        resultFragment.show(getSupportFragmentManager(), null);
     }
 
 

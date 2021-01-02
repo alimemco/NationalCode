@@ -8,4 +8,10 @@
     <color name="gray">#F5F5F5</color>
     <color name="blue_1">#00B4DB</color>
     <color name="blue_2">#0083B0</color>
+
+    <color name="green">#4caf50</color>
+    <color name="green_transparent">#4D4caf50</color>
+
+    <color name="red">#f44336</color>
+    <color name="red_transparent">#4Df44336</color>
 </resources>
